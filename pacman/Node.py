@@ -2,25 +2,28 @@ from copy import deepcopy
 import os
 import time
 class Node:
-    def __init__(self, maze, action = None, parent = None):
+    def __init__(self, maze: list, action: list = None, parent = None):
         self.maze = maze
         self.action = action
         self.parent = parent
-        self.initial_state = self.get_initial_state()
+        self.initial_state = self.get_initial_state() # Position of Pacman
         self.goal_state = self.get_food_location()
 
-
-    def get_action(self):
+    # Getter
+    def get_action(self) -> list:
         return self.action
 
-    def get_initial_state(self):
+
+    def get_initial_state(self) -> tuple:
+        """
+        Get position of Pacman in maze
+        """
         for i, x in enumerate(self.maze):
             if 'P' in x:
                 return (i, x.index('P'))
             
 
-
-    def get_food_location(self):
+    def get_food_location(self) -> list:
         foods = []
         for row, col in enumerate(self.maze):
             colIndex = 0
@@ -37,7 +40,7 @@ class Node:
         return foods
     
 
-    def get_successors(self):
+    def get_successors(self) -> list:
         successors = []
         actions = ['N', 'E', 'W', 'S']
 
@@ -48,15 +51,18 @@ class Node:
 
         return successors
     
-    def get_successor(self, action, state):
+    
+    def get_successor(self, action, state) -> list | None:
+        # Check at position x, y of maze is a barrier or not
         isBarrier = lambda x, y: self.maze[x][y] == '%'
 
         x, y = self.initial_state # x is row index, y is column index
         rowLenght , colLength = len(self.maze), len(self.maze[0]) - 1
-        successors = []
         flag = False
+
         if 0 <= x and x < rowLenght and 0 <= y and y < colLength:
-            if not isBarrier(x - 1, y) and action == 'N':
+            # Check go UP
+            if action == 'N' and not isBarrier(x - 1, y):
                 state[x - 1][y] = state[x][y]
                 flag = True
             # Check go RIGHT
@@ -68,17 +74,25 @@ class Node:
                 state[x + 1][y] = state[x][y]
                 flag = True
             # Check go LEFT
-            if not isBarrier(x, y - 1) and action == 'W':
+            if action == 'W' and not isBarrier(x, y - 1):
                 state[x][y - 1] = state[x][y]
                 flag = True
+
             if flag:
                 state[x][y] = ' '
                 return state
         return None
     
-    def visualize(self, actions, sleepTime=1):
-        # Postion of Pacman in initial state
-        x, y = self.get_initial_state() # x is row index, y is column index
+    
+    def printMaze(self) -> None:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        for x in self.maze:
+            print("".join(x))
+
+    
+    def visualize(self, actions, sleepTime=1) -> None:
+        # Postion of Pacman in initial state wherr x is row index, y is column index
+        x, y = self.get_initial_state() 
 
         os.system('cls' if os.name == 'nt' else 'clear')
         self.printMaze()
@@ -107,9 +121,5 @@ class Node:
 
             self.printMaze()
             time.sleep(sleepTime) 
-    
-    def printMaze(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
-        for x in self.maze:
-            print("".join(x))
+
 

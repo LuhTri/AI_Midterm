@@ -29,21 +29,22 @@ class Node:
                     foods.append((row, colIndex))
                 colIndex += 1
 
-        # Considering corner of maze is a food and append it to 'foods'
-        corner = [
+        # Considering corners of maze is a food and append it to 'foods'
+        corners = [
             (1, 1),
             (1, len(self.maze[1]) - 2),
             ((len(self.maze) - 2), 1),
             (len(self.maze) - 2, len(self.maze[1]) - 2),
         ]
 
-        for i in corner:
+        for corner in corners:
+            x, y = corner
             if (
-                i not in foods
-                and self.maze[i[0]][i[1]] != "%"
-                and self.maze[i[0]][i[1]] != "P"
+                corner not in foods
+                and self.maze[x][y] != "%"
+                and self.maze[x][y] != "P"
             ):
-                foods.append((i[0], i[1]))
+                foods.append((x, y))
         return foods
 
     def get_successors(self):

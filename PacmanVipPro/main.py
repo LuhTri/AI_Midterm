@@ -1,6 +1,7 @@
 from Node import Node
 from Solve import UCS, A_star
 from Heuristic import Heuristic
+import time
 
 
 def read_maze(maze_file):
@@ -9,19 +10,31 @@ def read_maze(maze_file):
     return maze
 mazeSize = ['small', 'medium', 'big', 'mediumClassic']
 path = f'layouts\\{mazeSize[2]}Maze.lay'
-a = Node(read_maze(path))
 
-h = Heuristic.euclideanDistance
-# action = UCS()
-# b, c = action.search(a)
-# # a.visualize(b, 0.5)
-# # print(len(b))
-# print(c)
 
-import time
-time1 = time.time()
-action = A_star()
-b = action.search(a, h)
-print(len(b))
-# a.visualize(b,0.2)
+problem = Node(read_maze(path))
 
+def testUCS(sleep):
+    time1 = time.time()
+    action = UCS()
+    path, cost = action.search(problem)
+    
+    problem.visualize(path, 0.5)
+    print('Cost:', cost)
+    time2 = time.time()
+    print('Executed time:', time2 - time1)
+
+def testAStart():
+    h = Heuristic.euclideanDistance
+    path = action.search(problem, h)
+    
+    time1 = time.time()
+    action = A_star()
+    print(len(path))
+    problem.visualize(b,0.2)
+    time2 = time.time()
+    print('Executed time:', time2 - time1)
+
+
+# testUCS()
+# testAStart()

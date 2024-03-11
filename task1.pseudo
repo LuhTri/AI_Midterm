@@ -1,0 +1,18 @@
+function BFS(problem) return a SOLUTION
+    frontier <- a FIFO queue with node as the only element
+    explored <- a set of explored node
+
+    loop do
+        node = POP(frontier)
+        add node.id to explored
+
+        if GOAL-TEST(node.STATE) return SOLUTION(node)
+
+        for each successor in GET-SUCCESSORS(node.state) do
+            if not explored.CONTAINS(successor) 
+                frontier.APPEND(successor)
+    
+
+// function AStar(problem) return a SOLUTION
+//     frontier <- a FIFO queue with node as the only element
+//     explored <- a set of explored node

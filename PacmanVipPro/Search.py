@@ -3,6 +3,7 @@ from Heuristic import Heuristic
 
 
 class SearchStrategy:
+
     def find_food_lowest_cost(self, goal_state, node: Node):
         cost_food = []
         for i in goal_state:
@@ -37,15 +38,11 @@ class SearchStrategy:
                 break
         return goal_node
 
-    def find_cost(self, state, successor_state):
-        Px, Py = state
-        Fx, Fy = successor_state
-        return (((Px - Fx) ** 2 + (Py - Fy) ** 2) ** (1/2))
-
     def find_action(self, goal_node):
         path = []
         path_a = []
         current_node = goal_node
+        
         while current_node.parent:
             path.insert(0, current_node.get_action())
             path_a.insert(0, current_node.get_initial_state())
@@ -54,6 +51,7 @@ class SearchStrategy:
 
     def check_food(self, goal_state, node_remove, path):
         goal_state = self.remove(goal_state, node_remove)
+        
         for i in path:
             if i in goal_state:
                 goal_state = self.remove(goal_state, i)

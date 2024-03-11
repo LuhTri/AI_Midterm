@@ -31,7 +31,7 @@ def testAStart():
     time1 = time.time()
     action = A_star()
     print(len(path))
-    problem.visualize(b,0.2)
+    problem.visualize(path, 0.2)
     time2 = time.time()
     print('Executed time:', time2 - time1)
 

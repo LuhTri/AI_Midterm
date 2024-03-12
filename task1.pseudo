@@ -10,9 +10,30 @@ function BFS(problem) return a SOLUTION
 
         for each successor in GET-SUCCESSORS(node.state) do
             if not explored.CONTAINS(successor) 
-                frontier.APPEND(successor)
+                frontier.PUSH(successor)
     
 
-// function AStar(problem) return a SOLUTION
-//     frontier <- a FIFO queue with node as the only element
-//     explored <- a set of explored node
+function AStar(problem) return a SOLUTION
+    node <- a node with problem.INITIAL-STATE
+    frontier <- a FIFO queue with node as the only element
+    explored <- a set of explored node
+    initialize TOTAL-PATH-COST, SEARCH-TREE-DEPTH = 0
+
+    loop until IS-EMPTY(frontier) do 
+        PATH-COST, NODE-DEPTH, node = POP(frontier)
+        explored.PUSH(node) 
+        increase TOTAL-PATH-COST by PATH-COST
+        
+        if node is deepest in search-tree then
+            increase SEARCH-TREE-DEPTH by 1
+        else do
+            increase NODE-DEPTH by 1
+
+
+        if GOAL-TEST(node.STATE) return SOLUTION(node)
+
+        for each successor in GET-SUCCESSORS(node.state) do
+            cost = HEURISTIC(successor) + NODE-DEPTH + ACTION-COST(node, successor)
+                if not successor not in frontier and explored then
+                    frontier.PUSH(successor)
+

@@ -10,8 +10,10 @@ class UCS(SearchStrategy):
         cost_all = 0
         frontier = [(0, [], node)]
         goal_state = node.get_food_location()
+        
         while len(goal_state) > 0:
             explored = dict()
+            
             while len(frontier) != 0:
                 cost, action, state = frontier.pop(0)
                 if super().is_goal(goal_state, state):
@@ -38,9 +40,11 @@ class A_star(SearchStrategy):
         cost_all = 0
         goal_state = node.get_food_location()
         frontier = [(h(node, goal_state), 0, [], node)]
+
         while goal_state:
             explored = []
-            while frontier is not None:
+            
+            while frontier:
                 cost, cost_path, action, state = frontier.pop(0)
                 explored.append(state.get_initial_state())
                 if super().is_goal(goal_state, state):
@@ -51,6 +55,7 @@ class A_star(SearchStrategy):
                     cost_all += cost
                     goal_state = super().remove(goal_state, state.initial_state)
                     break
+                
                 successors = state.get_successors()
                 for successor in successors:
                     value_heuristic = h(successor, goal_state)

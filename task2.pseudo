@@ -1,0 +1,40 @@
+function UNIFORM-COST-SEARCH(problem) return a SOLUTION
+    node <- a node with state = problem.INITIAL-STATE, PATH-COST = 0
+    frontier <- a priority queue ordered by PATH-COST, with node as the element
+    frontier.PUSH(node)
+    
+    loop maze.CONTAINS(foods) do
+        explored <- an empty dict to store explored node
+        
+        loop do 
+            node = POP(frontier)
+            if GOAL-TEST(node) then return SOLUTION
+
+            for each successor in GET-SUCCESSORS(node.STATE) do
+                if successor.STATE not it explored then
+                    frontier.PUSH(successor, frontier)
+                else successor.STATE in frontier with higher PATH-COST then
+                    replace that node with successor
+
+
+function AStar(problem) return a SOLUTION
+    node <- a node with state = problem.INITIAL-STATE, PATH-COST = 0
+    frontier <- a PQ ordered by PATH-COST, with node as the element
+    frontier.PUSH(node)
+
+    loop maze.CONTAINS(food) do
+        node = POP(frontier)
+        explored <- a set of explored node
+        explored.APPEND(node.STATE)
+
+        if GOAL-TEST(node.STATE) then return a SOLUTION
+
+        for each successor in GET-SUCCESSORS(node.STATE) do
+            if successor not in explored and frontier then
+                frontier.PUSH(successor)
+        
+
+                
+                    
+                    
+

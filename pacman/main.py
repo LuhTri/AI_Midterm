@@ -1,7 +1,7 @@
 from Node import Node
 from Solve import UCS, A_star
 from Heuristic import Heuristic
-import sys
+import argparse
 
 
 def read_maze(maze_file):
@@ -10,22 +10,32 @@ def read_maze(maze_file):
     return maze
 
 
-h1 = Heuristic.manhattanDistance
-h2 = Heuristic.euclideanDistance
+h1 = Heuristic.minEuclideanDistance
+h2 = Heuristic.distanceOfTwoFood
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-m', '--maze', metavar='MAZESIZE',
+                    type=str, help='Size of maze')
+parser.add_argument('-s', '--searchStrategy',
+                    metavar='SEARCHSTRATEGY', type=str, help='Search strategy')
+parser.add_argument('-hf', '--heuristic', metavar='HEURISTIC',
+                    type=str, help='Heuristic function')
 
-if len(sys.argv) < 4:
-    _, mazeSize, searchStrategy = sys.argv
-else:
-    _, mazeSize, searchStrategy, heuristic = sys.argv
+args = parser.parse_args()
+
+if args.maze:
+    mazeSize = args.maze
+if args.searchStrategy:
+    searchStrategy = args.searchStrategy
+if args.heuristic:
+    heuristic = args.heuristic
+
 
 path = f"layouts\\{mazeSize}.lay"
-
-
 if searchStrategy.upper() == 'UCS':
     problem = Node(read_maze(path))
     ucs = UCS()
-    path, cost = ucs.search(problem)
+    path = ucs.search(problem)
 
 elif searchStrategy.upper() == 'ASTAR':
     problem = Node(read_maze(path))
@@ -33,12 +43,12 @@ elif searchStrategy.upper() == 'ASTAR':
     astar = A_star()
 
     if heuristic == 'h1':
-        path, cost = astar.search(problem, h1)
+        path = astar.search(problem, h1)
     elif heuristic == 'h2':
-        path, cost = astar.search(problem, h2)
+        path = astar.search(problem, h2)
 
 
 problem.visualize(path, sleepTime=0.03)
 print(f'\n{searchStrategy.upper()} - {mazeSize}')
-print("Total Cost:", cost)
+print("Total Cost:", len(path))
 print("Path:\n", path)

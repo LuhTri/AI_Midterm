@@ -102,6 +102,7 @@ class Node:
 
             # New pacman's position
             self.maze[x][y] = 'P'
+
             self.printMaze()
             time.sleep(sleepTime)
 

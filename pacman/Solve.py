@@ -6,7 +6,6 @@ import time
 class UCS(SearchStrategy):
     def search(self, node: Node):
         actions = []
-        cost_all = 0 
         frontier = [(0, [], node)]
         goal_state = node.get_food_location()
         while len(goal_state) > 0:
@@ -16,7 +15,6 @@ class UCS(SearchStrategy):
                 if super().is_goal(goal_state, state):
                     goal_state = super().remove(goal_state, state.get_initial_state())
                     frontier = [(0, action, state)]
-                    cost_all += cost
                     break
                 successors = state.get_successors()
                 for successor in successors:
@@ -28,23 +26,20 @@ class UCS(SearchStrategy):
                             (newCost, newAction, successor), frontier)
         actions = action
         actions.append("Stop")
-        return actions, cost_all
+        return actions
 
 class A_star(SearchStrategy):
     def search(self, node: Node, h: callable):
         actions = []
-        cost_all = 0
         goal_state = node.get_food_location()
-        frontier = [(h(node, goal_state), 0, 0, [], node)]
+        frontier = [(h(node, goal_state), 0, [], node)]
         while goal_state:
             explored = []
             while frontier is not None:
-                cost, cost_path, cost_cal, action, state = frontier.pop(0)
+                cost, cost_path, action, state = frontier.pop(0)
                 explored.append(state.get_initial_state())
                 if super().is_goal(goal_state, state):       
-                    frontier = [(h(state, goal_state), 0, 0, action, state)]
-                    explored = []
-                    cost_all  += cost_cal
+                    frontier = [(h(state, goal_state), 0, action, state)]
                     goal_state = super().remove(goal_state, state.initial_state)
                     break
                 successors = state.get_successors()
@@ -52,22 +47,21 @@ class A_star(SearchStrategy):
                     value_heuristic = h(successor, goal_state)
                     cost_a = cost_path + 1
                     cost_suc = cost_a + value_heuristic
-                    cost_cal = cost + cost_suc
                     if successor.get_initial_state() not in explored and self.check_frontier(frontier, successor):
-                        frontier = self.heap_push((cost_suc, cost_a, cost_cal, action + [successor.get_action()], successor),frontier)
+                        frontier = self.heap_push((cost_suc, cost_a, action + [successor.get_action()], successor),frontier)
         actions = action
         actions.append("Stop")
-        return actions, cost_all
+        return actions
 
     def heap_push(self, cost_and_successor, frontier):
-        cost, cost_a, cost_cal, action, successor = cost_and_successor
-        frontier.append((cost, cost_a, cost_cal, action, successor))
+        cost, cost_a, action, successor = cost_and_successor
+        frontier.append((cost, cost_a, action, successor))
         frontier = super().sort_cost(frontier)
         return frontier
     
     def check_frontier(self, frontier, successor):
         for i in frontier:
-            cost, cost_a, cost_cal, action, node = i
+            cost, cost_a, action, node = i
             if node.get_initial_state() == successor.get_initial_state():
                 return False
         return True

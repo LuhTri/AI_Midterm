@@ -5,7 +5,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-#
+# 
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -19,7 +19,6 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
-
 
 class SearchProblem:
     """
@@ -72,8 +71,7 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return [s, s, w, s, w, w, s, w]
-
+    return  [s, s, w, s, w, w, s, w]
 
 def depthFirstSearch(problem):
     """
@@ -99,7 +97,7 @@ def depthFirstSearch(problem):
 
         node, direction = fringe.pop()
 
-        visited.append(node)
+        visited.append(node)             
 
         if problem.isGoalState(node):
             return direction
@@ -107,7 +105,24 @@ def depthFirstSearch(problem):
             if not successor in visited:
                 fringe.push((successor, direction + [action]))
     return []
-
+def breadthFirstSearch(problem):
+    """Search the shallowest nodes in the search tree first."""
+    "*** YOUR CODE HERE ***"
+    startstate = problem.getStartState()
+    fringe = util.Queue()
+    fringe.push((startstate, []))
+    visited = []
+    while not fringe.isEmpty():
+        node, direction = fringe.pop()
+        if problem.isGoalState(node):
+            return direction
+        for successor, action, stepcost in problem.getSuccessors(node):
+            if successor not in visited:
+                fringe.push((successor, direction + [action]))
+                visited.append(successor)
+        visited.append(node)
+    
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
@@ -123,10 +138,8 @@ def uniformCostSearch(problem):
         for successor, action, stepcost in problem.getSuccessors(node):
             if (successor not in visited) or (successor in visited and visited[successor] > cost + stepcost):
                 visited[successor] = cost + stepcost
-                fringe.push(
-                    (successor, direction + [action], cost + stepcost), cost + stepcost)
+                fringe.push((successor, direction + [action], cost + stepcost), cost + stepcost)
     return []
-
 
 def nullHeuristic(state, problem=None):
     """
@@ -134,7 +147,6 @@ def nullHeuristic(state, problem=None):
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
-
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
@@ -152,12 +164,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
         for successor, action, stepcost in problem.getSuccessors(node):
             if (successor not in visited) or (successor in visited and visited[successor] > cost + stepcost + (heuristic(startstate, problem))):
                 visited[successor] = cost + stepcost
-                fringe.push((successor, direction + [action], cost + stepcost),
-                            cost + stepcost + (heuristic(startstate, problem)))
+                fringe.push((successor, direction + [action], cost + stepcost), cost + stepcost + (heuristic(startstate, problem)))
     return []
 
 
 # Abbreviations
+bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+
+  

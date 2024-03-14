@@ -75,7 +75,7 @@ class Node:
                 return state
         return None
 
-    def visualize(self, actions, sleepTime=1):
+    def visualize(self, actions, sleepTime=0.5):
         # Postion of Pacman in initial state
         x, y = self.get_initial_state()  # x is row index, y is column index
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -102,7 +102,6 @@ class Node:
 
             # New pacman's position
             self.maze[x][y] = 'P'
-
             self.printMaze()
             time.sleep(sleepTime)
 
